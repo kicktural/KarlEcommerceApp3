@@ -1,0 +1,38 @@
+﻿@model List<CategoryAdminListDTO>
+
+<a href="/Admin/category/Create" class="btn btn-outline-primary">Category Create</a>
+
+<table class="table table-dark table-striped table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>CategoryName</th>
+            <th>Category Image</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @* @if (Model != null)
+        {  *@       
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#</td>
+                <td>@item.CategoryName</td>
+                <td><img src="@item.PhotoUrl" width="150" /></td>
+                 <td>@item.IsFeatured</td> 
+                <td> 
+                    <a href="/Admin/Category/Detail/@item.Id" class="btn btn-info">Detail</a>
+                    <a href="/Admin/category/delete/@item.Id" class="btn btn-danger">Delete</a>
+                    <a href="/Admin/category/Edit/@item.Id" class="btn btn-success">Edit</a>
+                </td>
+            </tr>
+            }
+        }@* 
+        else
+        {
+           
+        } *@
+    </tbody>
+</table>

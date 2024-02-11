@@ -1,0 +1,15 @@
+﻿@using static Entities.DTO.CategoryDTOs.CategoryDTO
+@model List<CategoryNavbarDTO>
+
+<ul id="menu-content" class="menu-content collapse out">
+    <!-- Single Item -->
+    <li data-toggle="collapse" data-target="#women" class="collapsed active">
+        <a href="#">Woman wear <span class="arrow"></span></a>
+        @foreach (var item in Model)
+        {          
+        <ul class="sub-menu collapse" id="women">
+            <li><a href="#">@item.CategoryName</a></li>
+            </ul>
+        }
+    </li>    
+</ul>

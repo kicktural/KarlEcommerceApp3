@@ -1,0 +1,151 @@
+﻿@using static Entities.DTO.ProductDTO.ProductDTO
+@model ProductEditRecordDTO
+@{
+    var languages = new List<string> { "AZ", "RU", "US" };
+    int counter = 0;
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        @for (var i = 0; i < languages.Count; i++)
+        {
+            <li class="nav-item @(i == 0 ? "active" : "")" role="presentation">
+                <button class="nav-link @(i == 0 ? "active" : "")" id="language-tab-@i" data-bs-toggle="tab" data-bs-target="#language-@i" type="button" role="tab" aria-controls="language-@i" aria-selected="@(i == 0 ? "true" : "false")">@languages[i]</button>
+            </li>
+        }
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        @for (var i = 0; i < languages.Count; i++)
+        {
+            <div class="tab-pane fade @(i == 0 ? "show active" : "")" id="language-@i" role="tabpanel" aria-labelledby="language-tab-@i">
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="ProductNames[i]" name="ProductNames" placeholder="Product Name in @languages[i]" />
+                    <input type="text" class="form-control" asp-for="Descriptions[i]" name="Descriptions" placeholder="Description in @languages[i]" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input type="number" step="0.01" min="0.00" asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DisCount"></label>
+        <input type="number" step="0.01" min="0.00" asp-for="DisCount" class="form-control" />
+        <span asp-validation-for="DisCount"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Quantity"></label>
+        <input type="number" asp-for="Quantity" min="0" class="form-control" />
+        <span asp-validation-for="Quantity"></span>
+    </div>
+    <div class="form-group">
+        <select class="form-control" name="CategoryId" asp-items="@ViewBag.Categories"></select>
+    </div>
+    <div class="form-group">
+        <input type="file" id="ProductPicture" accept="image/*" multiple class="form-control" />
+    </div>
+
+    <div class="card my-3">
+        <div id="pictureList" class="my-3 row p-2">
+            @foreach (var item in Model.PhotoUrls)
+            {
+                counter++;
+                <div data-item="@counter" class="col-2 ahmad-mosim ahmad-mosim-@counter">
+                    <img src="@item" class="img-fluid" alt="" />
+                    <input type="hidden" name="PhotoUrls" value="@item" />
+                    <sup>
+                        <button data-item-id="@counter" data-value="@item" name="PhotoUrl" class="btn btn-warning remove-picture-btn">
+                            Del
+                        </button>
+                    </sup>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="checkbox" asp-for="IsFeatured" id="featured" />
+        <label for="featured">Is Featured</label>
+    </div>
+    <input type="submit" value="Update" class="btn btn-dark" />
+</form>
+
+
+<script>
+    const productPicture = document.querySelector('#ProductPicture');
+    const pictureList = document.querySelector("#pictureList");
+    const removePictureBtn = document.querySelectorAll(".remove-picture-btn");
+    const ahmadMosim = document.querySelectorAll('.ahmad-mosim');
+
+
+
+    removePictureBtn.forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            var PhotoUrl = $(this).attr('data-value');
+            var itemId = $(this).attr('data-item-id');
+            var cls = $(`.ahmad-mosim-${itemId}`);
+            console.log(cls);
+
+            var a = new FormData();
+            a.append("PhotoUrl", PhotoUrl);
+
+
+            $.ajax({
+                url: "/Admin/Picture/RemovePicture",
+                type: "POST",
+                dataType: "json",
+                data: a,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    console.log(res);
+                    cls.remove();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            })
+        })
+    })
+
+    productPicture.addEventListener('change', function (e) {
+        var datas = new FormData();
+        var pictures = this.files;
+
+        console.log(pictures);
+        for (let i = 0; i < pictures.length; i++) {
+            datas.append("PhotoUrls", pictures[i]);
+        }
+
+        $.ajax({
+            url: "/Admin/Picture/UploadPicture",
+            type: "POST",
+            dataType: "json",
+            data: datas,
+            contentType: false,
+            processData: false,
+            success: function (e) {
+                console.log(e);
+                for (let i = 0; i < e.length; i++) {
+                    CreatePhotoList(e[i]);
+                }
+            },
+            error: function (e) {
+                console.error(e);
+            }
+        })
+    })
+
+    function CreatePhotoList(photo) {
+        pictureList.innerHTML += `
+                            <div class="col-2">
+                                <img src="${photo}" class="img-fluid" />
+                                    <input type="hidden" name="PhotoUrls" value="${photo}" />
+                            </div>
+                    `
+    }
+
+</script>

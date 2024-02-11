@@ -1,0 +1,202 @@
+﻿@model CheckoutVM
+
+<!-- ****** Cart Area Start ****** -->
+<div class="cart_area section_padding_100 clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="cart-table clearfix">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartProduct">
+                          
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="cart-footer d-flex mt-30">
+                    <div class="back-to-shop w-50">
+                        <a href="/Product/Index">Continue shooping</a>
+                    </div>
+                    <div class="update-checkout w-50 text-right">
+                        <a href="#">clear cart</a>
+                        <a href="#">Update cart</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="coupon-code-area mt-70">
+                    <div class="cart-page-heading">
+                        <h5>Cupon code</h5>
+                        <p>Enter your cupone code</p>
+                    </div>
+                    <form action="#">
+                        <input type="search" name="search" placeholder="#569ab15">
+                        <button type="submit">Apply</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="shipping-method-area mt-70">
+                    <div class="cart-page-heading">
+                        <h5>Shipping method</h5>
+                        <p>Select the one you want</p>
+                    </div>
+
+                    <div class="custom-control custom-radio mb-30">
+                        <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
+                        <label class="custom-control-label d-flex align-items-center justify-content-between" for="customRadio1"><span>Next day delivery</span><span>$4.99</span></label>
+                    </div>
+
+                    <div class="custom-control custom-radio mb-30">
+                        <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                        <label class="custom-control-label d-flex align-items-center justify-content-between" for="customRadio2"><span>Standard delivery</span><span>$1.99</span></label>
+                    </div>
+
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
+                        <label class="custom-control-label d-flex align-items-center justify-content-between" for="customRadio3"><span>Personal Pickup</span><span>Free</span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="cart-total-area mt-70">
+                    <div class="cart-page-heading">
+                        <h5>Cart total</h5>
+                        <p>Final info</p>
+                    </div>
+
+      @*               <ul class="cart-total-chart">
+                         <li><span>Subtotal</span> <span id="Subtotal">$59.90</span></li>
+                          <li><span>Shipping</span> <span id="Shipping">Free</span></li>   
+                        <li><span><strong>Total</strong></span> <span><strong id="total">$59.90</strong></span></li>
+                    </ul>
+                    <a href="/Cart/Checkout" class="btn karl-checkout-btn">Proceed to checkout</a> *@
+                    <div class="bg-light p-30 mb-5">
+                        <div class="border-bottom pb-2">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h6>Subtotal</h6>
+                                <h6 id="Subtotal">$</h6>
+                            </div>
+                             <div class="d-flex justify-content-between">
+                                <h6 class="font-weight-medium">Shipping</h6>
+                                <h6 id="Shipping" class="font-weight-medium">$10</h6>
+                            </div> 
+                        </div>
+                        <div class="pt-2">
+                            <div class="d-flex justify-content-between mt-2">
+                                <h5>Total</h5>
+                                <h5 id="total">$160</h5>
+                            </div>
+                            <a href="/Cart/Checkout" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ****** Cart Area End ****** -->
+
+
+
+@section Scripts{
+    <script>
+        const cartProduct = document.querySelector("#cartProduct");
+        const subTotal = document.getElementById('Subtotal');
+        const shipping = document.getElementById('Shipping');
+        const Total = document.getElementById('total');
+        $(function () {
+            GetData();
+        })
+
+        function GetData() {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/Cart/GetProduct",
+                success: function (e) {
+                    console.log(e);
+                    CreateData(e);
+                    TotalPrice(e);
+                },
+                error: function () {
+
+                }
+            })
+        }
+
+        function TotalPrice(data) {
+            subTotal.innerHTML = "";
+            shipping.innerHTML = "";
+            Total.innerHTML = "";
+            let total = 0;
+            for (let i = 0; i < data.length; i++) {
+                total += (data[i].price * data[i].quantity)
+            }
+            subTotal.innerHTML += total;
+            shipping.innerHTML += (total * 10) / 100;
+            Total.innerHTML += (total + ((total * 10) / 100))
+        }
+
+        function RemoveData(id) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: `/Cart/RemoveData/${id}`,
+                success: function (e) {
+                    if (e == "ok") {
+                        alert("Silindi")
+                        GetData();
+                    }
+                }
+            })
+        }
+
+        function CreateData(data) {
+            cartProduct.innerHTML = "";
+            for (let i = 0; i < data.length; i++) {
+                cartProduct.innerHTML += `
+                            <tr>
+                                    <td class="align-middle"><img src="${data[i].photoUrl}" alt="" style="width: 100px;"> ${data[i].productName}</td>
+                                    <td class="align-middle">$${data[i].price}</td>
+                                    <td class="align-middle">
+                                        <div class="input-group quantity mx-auto" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-primary btn-minus" >
+                                                <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                                    <input value="${data[i].quantity}" type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-primary btn-plus">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">$${data[i].quantity * data[i].price}</td>
+                                    <td class="align-middle"><button onclick="RemoveData(${data[i].id})" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                                </tr>
+                        `
+            }
+        }
+    </script>
+}
+
+
+
+
