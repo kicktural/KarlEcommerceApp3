@@ -87,8 +87,15 @@
                                             <i class="fa fa-star" aria-hidden="true"></i>
                                             <i class="fa fa-star" aria-hidden="true"></i>
                                         </div>
-                                        <h5 class="price">$120.99 <span>$130</span></h5>
+                                        <h5 class="price">$120.99 <span>$130</span></h5>                                         
+                                    @if (Model.ProductDetail != null)
+                                    {
                                         <p>@Model.ProductDetail.ProductName</p>
+                                    }
+                                    else
+                                    {
+                                        <p>ProductDetail is null</p>
+                                    }
                                         <a href="#">View Full Product Details</a>
                                     </div>
                                     <!-- Add to Cart Form -->

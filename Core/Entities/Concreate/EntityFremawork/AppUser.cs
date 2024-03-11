@@ -9,7 +9,8 @@ namespace Core.Entities.Concreate.EntityFremawork
 {
     public class AppUser : IdentityUser, IEntity
     {
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } 
         public string LastName { get; set; }
+        public string?  Picture { get; set; }
     }
 }

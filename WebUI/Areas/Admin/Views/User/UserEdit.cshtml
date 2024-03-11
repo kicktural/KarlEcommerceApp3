@@ -1,0 +1,74 @@
+﻿@model UserEditViewModel
+
+
+@{
+	Layout = "_AuthLayout";
+}
+
+
+@section Scripts {
+
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<div class="card card-authentication1 mx-auto my-4">
+	<div class="card-body">
+		<div class="card-content p-2">
+			<div class="text-center">
+				<img src="~/Auth/images/logo-icon.png" alt="logo icon">
+			</div>
+            <a href="/Admin/user/Index" class="btn btn-secondary">Back</a>
+			<div class="card-title text-uppercase text-center py-3">Sign Up</div>
+			@if (TempData["SuccessMessage"] != null)
+			{
+				<div class="alert alert-info" role="alert">
+					@TempData["SuccessMessage"]
+				</div>
+			}
+			<form method="post"  enctype="multipart/form-data">
+				<div asp-validation-summary="All" class="text-danger"></div>
+				<div class="form-group">
+					<label for="exampleInputName" class="sr-only">First Name</label>
+					<div class="position-relative has-icon-right">
+						<input type="text" asp-for="FirstName" id="exampleInputName" class="form-control input-shadow" placeholder="Enter Your Name">
+						<span asp-validation-for="FirstName" cite="text-danger"></span>
+						<div class="form-control-position">
+							<i class="icon-user"></i>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="exampleInputName" class="sr-only">Last Name</label>
+					<div class="position-relative has-icon-right">
+						<input type="text" asp-for="LastName" id="exampleInputName" class="form-control input-shadow" placeholder="Enter Your Surname">
+						<span asp-validation-for="LastName" cite="text-danger"></span>
+						<div class="form-control-position">
+							<i class="icon-user"></i>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="exampleInputEmailId" class="sr-only">Email</label>
+					<div class="position-relative has-icon-right">
+						<input type="email" id="exampleInputEmailId" asp-for="Email" class="form-control input-shadow" placeholder="Enter Your Email">
+						<span asp-validation-for="Email" class="text-danger"></span>
+						<div class="form-control-position">
+							<i class="icon-envelope-open"></i>
+						</div>
+					</div>
+				</div>
+				 <div class="gap-2">
+					<div class="form-group">
+						<label asp-for="Picture">UserProfilePhoto</label>
+						<input id="inputFile" asp-for="Picture" type="file" required accept="image/*" class="form-control p_input">
+						<span asp-validation-for="Picture" class="text-danger"></span>
+					</div>
+				</div>
+ 
+				<button type="submit" class="btn btn-light btn-block waves-effect waves-light">Update UserProfile</button>
+            </form>
+</div>
+
+

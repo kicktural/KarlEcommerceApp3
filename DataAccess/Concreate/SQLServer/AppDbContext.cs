@@ -26,12 +26,14 @@ namespace DataAccess.Concreate.SQLServer
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductLanguage> ProductLanguages { get; set; }
+        //public DbSet<AppRole> AppRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<User>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
+            builder.Entity<AppRole>().ToTable("Roles");
 
             builder.Entity<ProductAdminListDTO>().ToView(null);
 

@@ -2,8 +2,11 @@
 using Business.Abstract;
 using Business.AutoMapper;
 using Business.Concreate;
+using Core.Entities.Concreate.EntityFremawork;
 using DataAccess.Abstract;
 using DataAccess.Concreate.SQLServer;
+using Entities.Concreate;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,9 +37,9 @@ namespace Business.DependencyResolver
             Services.AddScoped<IUserService, UserManager>();
             Services.AddScoped<IUserDAL, EFUserDAL>();
 
-
             Services.Configure<IdentityOptions>(options =>
             {
+                //options.User.RequireUniqueEmail = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;

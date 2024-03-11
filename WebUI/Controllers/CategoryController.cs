@@ -9,13 +9,12 @@ namespace WebUI.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
+		public CategoryController(ICategoryService categoryService)
+		{
+			_categoryService = categoryService;
+		}
 
-        public CategoryController(ICategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
-
-        public IActionResult Index()
+		public IActionResult Index()
         {
             return View();
         }
@@ -26,6 +25,7 @@ namespace WebUI.Controllers
 
             var categoryView = _categoryService.GetAllCategoriesFeatured(currentColture);
             var categoryDetail = _categoryService.GetCategoryDetail(id, currentColture);
+      
             DetailVM categoryDetailVM = new DetailVM()
             {
                 CategoryDetail = categoryDetail.Data,

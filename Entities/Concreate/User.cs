@@ -11,6 +11,5 @@ namespace Entities.Concreate
 {
     public class User : AppUser
     {
-        public string Address { get; set; }
     }
 }

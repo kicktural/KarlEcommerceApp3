@@ -15,7 +15,8 @@ namespace WebUI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = _categoryService.GetAllCategorieNavbar("az-Az");
+			var currentColture = Thread.CurrentThread.CurrentCulture.Name;
+			var result = _categoryService.GetAllCategorieNavbar(currentColture);
             return View("CategoryNavbar", result.Data);
         }
     }
